@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Book implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String title;
     private List<Author> authors;
     private int year;

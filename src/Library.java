@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Library implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String name;
     private List<BookStore> bookStores;
     private List<BookReader> readers;
