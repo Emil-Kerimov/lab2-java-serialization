@@ -1,7 +1,11 @@
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Book {
+public class Book implements Externalizable {
     private String title;
     private List<Author> authors;
     private int year;
@@ -13,6 +17,7 @@ public class Book {
         this.year = year;
         this.number = number;
     }
+    public Book() {}
 
     public String getTitle() {
         return title;
@@ -47,6 +52,34 @@ public class Book {
     }
     @Override
     public String toString() {
-        return "title: " + title + "Authors: " + authors + ", Year: " + year + ", Number: " + number;
+        return "title: " + title + " Authors: " + authors + ", Year: " + year + ", Number: " + number;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(title);
+        out.writeInt(year);
+        out.writeInt(number);
+
+        out.writeInt(authors.size());
+        for (Author e: authors) {
+            e.writeExternal(out);
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        title = (String) in.readObject();
+        year = in.readInt();
+        number = in.readInt();
+
+        authors = new ArrayList<>();
+
+        int size = in.readInt();
+        for (int i = 0; i < size; i++) {
+            Author author = new Author();
+            author.readExternal(in);
+            authors.add(author);
+        }
     }
 }

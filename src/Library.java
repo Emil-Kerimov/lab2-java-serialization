@@ -1,11 +1,8 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Library implements Serializable {
+public class Library implements Externalizable {
     private String name;
     private List<BookStore> bookStores;
     transient private List<BookReader> readers;
@@ -16,6 +13,7 @@ public class Library implements Serializable {
         this.bookStores = new ArrayList<>();
         this.readers = new ArrayList<>();
     }
+    public Library(){}
 
     public void addBookStore(BookStore bookStore){
         bookStores.add(bookStore);
@@ -58,64 +56,36 @@ public class Library implements Serializable {
                 '}';
     }
 
-    private void writeObject(ObjectOutputStream out)throws IOException {
-        out.defaultWriteObject();
-
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(name);
+        out.writeInt(bookStores.size());
+        for (BookStore bs: bookStores) {
+            bs.writeExternal(out);
+        }
         out.writeInt(readers.size());
-
         for (BookReader br: readers) {
-
-            out.writeInt(br.getBorrowedBooks().size());
-
-            for (Book b: br.getBorrowedBooks()) {
-
-                out.writeInt(b.getAuthors().size());
-
-                for (Author a:b.getAuthors()) {
-                    out.writeObject(a.getName());
-                    out.writeObject(a.getLastName());
-                }
-
-                out.writeObject(b.getTitle());
-                out.writeInt(b.getNumber());
-                out.writeInt(b.getYear());
-            }
-
-
-
-            out.writeObject(br.getName());
-            out.writeObject(br.getLastName());
-            out.writeLong(br.getNum());
+            br.writeExternal(out);
         }
     }
 
-    private void readObject(ObjectInputStream in)throws IOException ,ClassNotFoundException{
-        in.defaultReadObject();
-         readers = new ArrayList<>();
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        name = (String) in.readObject();
+        bookStores = new ArrayList<>();
+        readers = new ArrayList<>();
 
         int size = in.readInt();
-
         for (int i = 0; i < size; i++) {
-            ArrayList<Book> books = new ArrayList<>();
-
-            int sizeBooks = in.readInt();
-
-            for (int j = 0; j < sizeBooks; j++) {
-
-                int authorSize = in.readInt();
-
-                List<Author> authors = new ArrayList<>();
-
-                for (int k = 0; k < authorSize; k++) {
-                    authors.add(new Author((String) in.readObject(),(String) in.readObject()));
-                }
-
-                books.add(new Book((String) in.readObject(),authors,in.readInt(),in.readInt()));
-            }
-
-
-            readers.add(new BookReader((String) in.readObject(),(String) in.readObject(),in.readInt()));
-
+            BookStore bookStore = new BookStore();
+            bookStore.readExternal(in);
+            bookStores.add(bookStore);
+        }
+        int sizeR = in.readInt();
+        for (int i = 0; i < sizeR; i++) {
+            BookReader bookReader = new BookReader();
+            bookReader.readExternal(in);
+            readers.add(bookReader);
         }
     }
 }

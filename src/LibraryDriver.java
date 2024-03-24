@@ -5,27 +5,27 @@ import java.util.List;
 public class LibraryDriver {
 
 
-    public static void serializeObject(String fileName, Object obj){
+    public static void serializeObject(String fileName, Externalizable ex){
         try {
-            ObjectOutputStream os = new ObjectOutputStream(new
-                    FileOutputStream(fileName));
-            os.writeObject(obj);
-            os.close();
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));
+            ex.writeExternal(outputStream);
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static Object deSerializeObject(String fileName){
-        Object obj = null;
+
+    public static Library deSerializeObject(String fileName){
+        Library library = new Library();
         try {
-            ObjectInputStream is = new ObjectInputStream(new
-                    FileInputStream(fileName));
-            obj = is.readObject();
-            is.close();
-        } catch (Exception e) {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName));
+            library.readExternal(inputStream);
+            inputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return obj;
+
+        return library;
     }
     public static void main(String[] args) {
         Author author1 = new Author("Name1", "LastName1");
@@ -46,8 +46,8 @@ public class LibraryDriver {
         Library lib = new Library("lib1");
         lib.addBookStore(bookStore);
         lib.addReader(reader);
-        LibraryDriver.serializeObject("libVer2.ser", lib);
-        Object deserlib = LibraryDriver.deSerializeObject("libVer2.ser");
+        LibraryDriver.serializeObject("libVer3.ser", lib);
+        Object deserlib = LibraryDriver.deSerializeObject("libVer3.ser");
         System.out.println("Deserialized: " + deserlib);
 
     }

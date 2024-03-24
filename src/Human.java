@@ -1,6 +1,7 @@
-import java.io.Serializable;
+import java.io.Externalizable;
 
-public class Human implements Serializable {
+
+public abstract class Human implements Externalizable {
     private static final long serialVersionUID = 1L;
     public String name;
     public String lastName;
@@ -8,6 +9,10 @@ public class Human implements Serializable {
         this.name = name;
         this.lastName = lastName;
     }
+
+    public Human() {
+    }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }

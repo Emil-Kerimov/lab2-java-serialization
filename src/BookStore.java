@@ -1,11 +1,8 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookStore implements Serializable {
+public class BookStore implements Externalizable {
     private static final long serialVersionUID = 1L;
     private  String name;
     transient private List<Book> books;
@@ -14,6 +11,7 @@ public class BookStore implements Serializable {
         this.name = name;
         this.books = new ArrayList<>();
     }
+    public BookStore(){}
 
     public void addBook(Book book) {
         books.add(book);
@@ -39,39 +37,27 @@ public class BookStore implements Serializable {
     public String toString() {
         return "BookStore: " + name + "Books: " + books;
     }
-    private void writeObject(ObjectOutputStream out)throws IOException{
-        out.defaultWriteObject();
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(name);
         out.writeInt(books.size());
+
         for (Book b: books) {
-
-            out.writeInt(b.getAuthors().size());
-
-            for (Author a:b.getAuthors()) {
-                out.writeObject(a.getName());
-                out.writeObject(a.getLastName());
-            }
-
-            out.writeObject(b.getTitle());
-            out.writeInt(b.getYear());
-            out.writeInt(b.getNumber());
+            b.writeExternal(out);
         }
     }
 
-    private void readObject(ObjectInputStream in)throws IOException ,ClassNotFoundException{
-        in.defaultReadObject();
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        name = (String) in.readObject();
+        int size = in.readInt();
+
         books = new ArrayList<>();
 
-        int size = in.readInt();
         for (int i = 0; i < size; i++) {
-            int authorSize = in.readInt();
-
-            List<Author> authors = new ArrayList<>();
-
-            for (int j = 0; j < authorSize; j++) {
-                authors.add(new Author((String) in.readObject(),(String) in.readObject()));
-            }
-
-            books.add(new Book((String) in.readObject(),authors,in.readInt(),in.readInt()));
+            Book book = new Book();
+            book.readExternal(in);
+            books.add(book);
         }
     }
 
