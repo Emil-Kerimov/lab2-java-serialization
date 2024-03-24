@@ -1,3 +1,5 @@
+package version3;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public class Library implements Externalizable {
 
     @Override
     public String toString() {
-        return "Library " +
+        return "version3.Library " +
                   name +
                 ", bookStores = " + bookStores +
                 ", readers = " + readers +

@@ -1,3 +1,5 @@
+package version3;
+
 import java.io.*;
 
 public class Author extends  Human implements Externalizable {

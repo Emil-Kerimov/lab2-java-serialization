@@ -1,3 +1,5 @@
+package version3;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;

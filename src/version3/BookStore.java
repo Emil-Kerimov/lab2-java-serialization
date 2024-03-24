@@ -1,3 +1,5 @@
+package version3;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ public class BookStore implements Externalizable {
 
     @Override
     public String toString() {
-        return "BookStore: " + name + "Books: " + books;
+        return "version3.BookStore: " + name + "Books: " + books;
     }
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
