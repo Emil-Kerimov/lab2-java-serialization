@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookReader extends Human {
+public class BookReader extends Human  {
     private int num;
     private List<Book> borrowedBooks;
     public BookReader(String name, String lastName, int num) {

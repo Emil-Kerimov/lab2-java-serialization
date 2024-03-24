@@ -1,7 +1,6 @@
 import java.io.Serializable;
 
-public class Author extends  Human implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Author extends  Human {
 
     public Author(String name, String lastName) {
         super(name, lastName);

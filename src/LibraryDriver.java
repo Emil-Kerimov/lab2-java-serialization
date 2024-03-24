@@ -40,13 +40,14 @@ public class LibraryDriver {
         BookStore bookStore = new BookStore("bookStore");
         bookStore.addBook(book1);
 
+
         BookReader reader = new BookReader("readerName", "readerLastName", 1);
 
         Library lib = new Library("lib1");
         lib.addBookStore(bookStore);
         lib.addReader(reader);
-        LibraryDriver.serializeObject("lib.ser", lib);
-        Object deserlib = LibraryDriver.deSerializeObject("lib.ser");
+        LibraryDriver.serializeObject("libVer2.ser", lib);
+        Object deserlib = LibraryDriver.deSerializeObject("libVer2.ser");
         System.out.println("Deserialized: " + deserlib);
 
     }
